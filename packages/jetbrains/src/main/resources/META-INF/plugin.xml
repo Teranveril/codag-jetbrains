@@ -9,7 +9,13 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- S1: Settings configurable will be registered here -->
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.codag.jetbrains.settings.CodagSettingsConfigurable"
+                id="com.codag.jetbrains.settings"
+                displayName="Codag"/>
+        <applicationService
+                serviceImplementation="com.codag.jetbrains.settings.CodagSettings"/>
         <!-- S3: ToolWindow factory will be registered here -->
     </extensions>
 
