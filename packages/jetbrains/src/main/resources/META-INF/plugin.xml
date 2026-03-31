@@ -1,0 +1,19 @@
+<idea-plugin>
+    <id>com.codag.jetbrains</id>
+    <name>Codag</name>
+    <description><![CDATA[
+        Visualize AI/LLM workflows in your codebase as interactive DAG graphs.
+        Powered by Gemini analysis. Port of the VS Code Codag extension to JetBrains Platform.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- S1: Settings configurable will be registered here -->
+        <!-- S3: ToolWindow factory will be registered here -->
+    </extensions>
+
+    <actions>
+        <!-- S4: Actions will be registered here -->
+    </actions>
+</idea-plugin>
