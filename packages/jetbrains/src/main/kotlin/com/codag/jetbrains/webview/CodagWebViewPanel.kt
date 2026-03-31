@@ -1,7 +1,9 @@
 package com.codag.jetbrains.webview
 
+import com.codag.jetbrains.watch.ThemeDetector
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.jcef.JBCefBrowser
@@ -88,6 +90,16 @@ class CodagWebViewPanel(
             })();
         """.trimIndent()
         browser.cefBrowser.executeJavaScript(script, browser.cefBrowser.url, 0)
+
+        // Inject IDE theme
+        applyIdeTheme()
+    }
+
+    private fun applyIdeTheme() {
+        val schemeName = EditorColorsManager.getInstance().globalScheme.name
+        val themeClass = ThemeDetector.resolveThemeClass(schemeName)
+        val themeScript = ThemeDetector.generateThemeScript(themeClass)
+        browser.cefBrowser.executeJavaScript(themeScript, browser.cefBrowser.url, 0)
     }
 
     private fun loadWebView() {

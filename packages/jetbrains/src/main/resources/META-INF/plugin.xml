@@ -21,7 +21,19 @@
                 anchor="right"
                 factoryClass="com.codag.jetbrains.webview.CodagToolWindowFactory"
                 icon="AllIcons.Toolwindows.ToolWindowStructure"/>
+        <statusBarWidgetFactory
+                id="CodagStatusBar"
+                implementation="com.codag.jetbrains.watch.CodagStatusBarWidgetFactory"/>
+        <postStartupActivity
+                implementation="com.codag.jetbrains.watch.CodagStartupActivity"/>
     </extensions>
+
+    <listeners>
+        <projectListeners>
+            <listener class="com.codag.jetbrains.watch.CodagFileWatcher"
+                      topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        </projectListeners>
+    </listeners>
 
     <actions>
         <action id="com.codag.jetbrains.AnalyzeFiles"
