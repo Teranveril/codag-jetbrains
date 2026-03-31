@@ -1,6 +1,5 @@
 package com.codag.jetbrains.watch
 
-import com.codag.jetbrains.pipeline.SourceNavigatorHelper
 import org.junit.Assert.*
 import org.junit.Test
 

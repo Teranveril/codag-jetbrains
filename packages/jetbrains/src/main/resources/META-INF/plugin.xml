@@ -26,6 +26,10 @@
                 implementation="com.codag.jetbrains.watch.CodagStatusBarWidgetFactory"/>
         <postStartupActivity
                 implementation="com.codag.jetbrains.watch.CodagStartupActivity"/>
+        <notificationGroup
+                id="Codag Notifications"
+                displayType="BALLOON"
+                isLogByDefault="true"/>
     </extensions>
 
     <listeners>

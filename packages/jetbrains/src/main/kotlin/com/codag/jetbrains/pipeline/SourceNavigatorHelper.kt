@@ -1,27 +1,20 @@
 package com.codag.jetbrains.pipeline
 
+import com.codag.jetbrains.CodagConstants
+
 /**
  * Pure utility for source file navigation helpers.
  * No IDE dependencies — fully testable.
  */
 object SourceNavigatorHelper {
 
-    private val SUPPORTED_LANGUAGE_EXTENSIONS = setOf(
-        "py", "ts", "tsx", "js", "jsx", "kt", "kts",
-        "java", "go", "rs", "rb", "php", "swift", "scala",
-        "c", "cpp", "h", "hpp", "cs", "vue", "svelte"
-    )
-
     fun clampLine(line: Int, totalLines: Int): Int {
         return line.coerceIn(1, maxOf(1, totalLines))
     }
 
     fun resolveFilePath(basePath: String, filePath: String): String {
-        if (filePath.startsWith("/")) {
-            return filePath
-        }
-        val base = basePath.trimEnd('/')
-        return "$base/$filePath"
+        if (filePath.startsWith("/")) return filePath
+        return "${basePath.trimEnd('/')}/$filePath"
     }
 
     fun getExtension(fileName: String): String {
@@ -30,8 +23,6 @@ object SourceNavigatorHelper {
         return fileName.substring(lastDot + 1)
     }
 
-    fun isSupportedLanguage(fileName: String): Boolean {
-        val ext = getExtension(fileName).lowercase()
-        return ext in SUPPORTED_LANGUAGE_EXTENSIONS
-    }
+    fun isSupportedLanguage(fileName: String): Boolean =
+        CodagConstants.isSupportedExtension(fileName)
 }
