@@ -1,21 +1,21 @@
 /* DM Sans - bundled locally for reliable rendering */
 @font-face {
     font-family: 'DM Sans';
-    src: url('{{fontsUri}}/dm-sans-400.ttf') format('truetype');
+    src: url('fonts/dm-sans-400.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'DM Sans';
-    src: url('{{fontsUri}}/dm-sans-500.ttf') format('truetype');
+    src: url('fonts/dm-sans-500.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 @font-face {
     font-family: 'DM Sans';
-    src: url('{{fontsUri}}/dm-sans-600.ttf') format('truetype');
+    src: url('fonts/dm-sans-600.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -28,6 +28,38 @@
     font-weight: normal;
     font-style: normal;
     font-display: swap;
+}
+
+/* Fallback CSS variable definitions for JCEF (JetBrains).
+   ThemeDetector.kt injects the real palette at runtime;
+   these ensure the UI is always readable even before injection fires. */
+:root {
+    --vscode-editor-background: #1e1e1e;
+    --vscode-editor-foreground: #d4d4d4;
+    --vscode-foreground: #cccccc;
+    --vscode-descriptionForeground: #9e9e9e;
+    --vscode-icon-foreground: #c5c5c5;
+    --vscode-panel-border: #2d2d2d;
+    --vscode-contrastBorder: #444444;
+    --vscode-focusBorder: #007fd4;
+    --vscode-textLink-foreground: #3794ff;
+    --vscode-button-background: #0e639c;
+    --vscode-button-foreground: #ffffff;
+    --vscode-button-hoverBackground: #1177bb;
+    --vscode-button-secondaryBackground: #3a3d41;
+    --vscode-input-background: #3c3c3c;
+    --vscode-input-foreground: #cccccc;
+    --vscode-input-placeholderForeground: #a0a0a0;
+    --vscode-toolbar-hoverBackground: #2a2d2e;
+    --vscode-list-hoverBackground: #2a2d2e;
+    --vscode-editor-inactiveSelectionBackground: #3a3d41;
+    --vscode-editorWidget-border: #454545;
+    --vscode-editorLineNumber-foreground: #858585;
+    --vscode-progressBar-background: #0e70c0;
+    --vscode-progressBar-foreground: #0e70c0;
+    --vscode-charts-green: #89d185;
+    --vscode-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --vscode-editor-font-family: 'JetBrains Mono', Menlo, Monaco, 'Courier New', monospace;
 }
 
 * {
@@ -1508,19 +1540,19 @@ body {
 
 /* Static green border - file has changed but not actively editing */
 .node-border.file-changed {
-    stroke: #00ff00 !important;
+    stroke: var(--vscode-charts-green) !important;
     stroke-width: 1px !important;
     transition: stroke 0.3s ease;
 }
 
-/* Animated neon chase border - file is being actively edited */
+/* Animated chase border - file is being actively edited */
 .node-border.file-active {
-    stroke: #00ff00 !important;
+    stroke: var(--vscode-charts-green) !important;
     stroke-width: 1px !important;
     stroke-dasharray: 4 2;
     stroke-linecap: round;
     animation: neon-chase 0.5s linear infinite, neon-pulse 1.5s ease-in-out infinite;
-    filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.6)) drop-shadow(0 0 6px rgba(0, 255, 0, 0.3));
+    filter: drop-shadow(0 0 3px rgba(137, 209, 133, 0.5)) drop-shadow(0 0 6px rgba(137, 209, 133, 0.25));
 }
 
 @keyframes neon-chase {
@@ -1530,20 +1562,21 @@ body {
 
 @keyframes neon-pulse {
     0%, 100% {
-        filter: drop-shadow(0 0 3px rgba(0, 255, 0, 0.6)) drop-shadow(0 0 6px rgba(0, 255, 0, 0.3));
+        filter: drop-shadow(0 0 3px rgba(137, 209, 133, 0.5)) drop-shadow(0 0 6px rgba(137, 209, 133, 0.25));
     }
     50% {
-        filter: drop-shadow(0 0 4px rgba(0, 255, 0, 0.8)) drop-shadow(0 0 8px rgba(0, 255, 0, 0.4));
+        filter: drop-shadow(0 0 4px rgba(137, 209, 133, 0.7)) drop-shadow(0 0 8px rgba(137, 209, 133, 0.35));
     }
 }
 
 /* Minimap file change indicators */
 .minimap-node.file-changed {
-    fill: rgba(0, 255, 0, 0.8) !important;
+    fill: var(--vscode-charts-green) !important;
+    opacity: 0.8;
 }
 
 .minimap-node.file-active {
-    fill: rgba(0, 255, 0, 0.8) !important;
+    fill: var(--vscode-charts-green) !important;
     animation: minimap-pulse 0.8s ease-in-out infinite;
 }
 

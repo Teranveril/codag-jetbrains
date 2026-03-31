@@ -21,6 +21,11 @@ object CodagHtmlProvider {
 
         var html = templateUrl.readText()
 
+        // Resolve font URIs — CSS uses {{fontsUri}} placeholder from VS Code build.
+        // In JCEF, relative paths work against the base URL so just point at fonts/.
+        val fontsBase = getResourceBaseUrl()?.let { "${it}fonts" } ?: "fonts"
+        html = html.replace("{{fontsUri}}", fontsBase)
+
         if (graphJson != null) {
             val escaped = CodagMessageBridge.escapeForScript(graphJson)
             val injection = "window.__GRAPH_DATA__ = $escaped;"
