@@ -16,7 +16,11 @@
                 displayName="Codag"/>
         <applicationService
                 serviceImplementation="com.codag.jetbrains.settings.CodagSettings"/>
-        <!-- S3: ToolWindow factory will be registered here -->
+        <toolWindow
+                id="Codag"
+                anchor="right"
+                factoryClass="com.codag.jetbrains.webview.CodagToolWindowFactory"
+                icon="AllIcons.Toolwindows.ToolWindowStructure"/>
     </extensions>
 
     <actions>
