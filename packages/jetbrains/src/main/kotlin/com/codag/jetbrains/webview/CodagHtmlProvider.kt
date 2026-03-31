@@ -32,9 +32,10 @@ object CodagHtmlProvider {
 
     /**
      * Get the base URL for resolving relative resource paths in JCEF.
-     * Uses the resources/web/ directory as the base.
+     * Derives from a known file since JAR classloaders don't resolve directories.
      */
     fun getResourceBaseUrl(): String? {
-        return javaClass.getResource("/web/")?.toExternalForm()
+        val indexUrl = javaClass.getResource("/web/index.html") ?: return null
+        return indexUrl.toExternalForm().removeSuffix("index.html")
     }
 }
