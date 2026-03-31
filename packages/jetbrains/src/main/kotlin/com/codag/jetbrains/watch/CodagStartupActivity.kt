@@ -5,7 +5,6 @@ import com.codag.jetbrains.settings.CodagSettings
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
-import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.WindowManager
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
@@ -22,9 +21,7 @@ class CodagStartupActivity : ProjectActivity {
         log.info("Codag plugin initialized for project: ${project.name}")
 
         // Initial health check on background thread
-        val settings = com.intellij.openapi.application.ApplicationManager.getApplication()
-            .getService(CodagSettings::class.java)
-            .state
+        val settings = CodagSettings.getInstance().state
         val client = CodagApiClient(settings)
 
         val statusBar = WindowManager.getInstance().getStatusBar(project)

@@ -14,8 +14,6 @@
                 instance="com.codag.jetbrains.settings.CodagSettingsConfigurable"
                 id="com.codag.jetbrains.settings"
                 displayName="Codag"/>
-        <applicationService
-                serviceImplementation="com.codag.jetbrains.settings.CodagSettings"/>
         <toolWindow
                 id="Codag"
                 anchor="right"

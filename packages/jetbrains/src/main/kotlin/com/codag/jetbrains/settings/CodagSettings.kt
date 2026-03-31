@@ -1,13 +1,15 @@
 package com.codag.jetbrains.settings
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
-import com.intellij.openapi.components.StoragePathMacros
 
+@Service(Service.Level.APP)
 @State(
     name = "com.codag.jetbrains.settings.CodagSettings",
-    storages = [Storage(StoragePathMacros.WORKSPACE_FILE)]
+    storages = [Storage("codagSettings.xml")]
 )
 class CodagSettings : PersistentStateComponent<CodagSettingsState> {
 
@@ -17,6 +19,12 @@ class CodagSettings : PersistentStateComponent<CodagSettingsState> {
 
     override fun loadState(state: CodagSettingsState) {
         settingsState = state.copy()
+    }
+
+    companion object {
+        @JvmStatic
+        fun getInstance(): CodagSettings =
+            ApplicationManager.getApplication().getService(CodagSettings::class.java)
     }
 }
 

@@ -8,7 +8,7 @@ import com.intellij.ui.dsl.builder.panel
 
 class CodagSettingsConfigurable : BoundConfigurable("Codag") {
 
-    private val settings = CodagSettings()
+    private val settings = CodagSettings.getInstance()
 
     override fun createPanel(): DialogPanel = panel {
         group("Backend Connection") {

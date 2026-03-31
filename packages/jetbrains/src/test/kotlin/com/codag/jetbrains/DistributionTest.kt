@@ -26,7 +26,7 @@ class DistributionTest {
 
         // Extensions
         assertTrue("Settings configurable", xml.contains("applicationConfigurable"))
-        assertTrue("Application service", xml.contains("applicationService"))
+        // CodagSettings uses @Service(Level.APP) annotation — no XML applicationService needed
         assertTrue("Tool window", xml.contains("toolWindow"))
         assertTrue("Status bar widget", xml.contains("statusBarWidgetFactory"))
         assertTrue("Startup activity", xml.contains("postStartupActivity"))

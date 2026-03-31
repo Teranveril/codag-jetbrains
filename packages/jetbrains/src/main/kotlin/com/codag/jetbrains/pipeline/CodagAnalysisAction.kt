@@ -60,10 +60,7 @@ class CodagAnalysisAction : AnAction() {
                 indicator.fraction = 0.3
                 indicator.text = "Building analysis request..."
 
-                val settings = com.intellij.openapi.application.ApplicationManager
-                    .getApplication()
-                    .getService(CodagSettings::class.java)
-                    .state
+                val settings = CodagSettings.getInstance().state
                 val request = AnalysisPipelineHelper.buildAnalyzeRequest(fileMap)
 
                 indicator.fraction = 0.5
