@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(head -1 "$COMMIT_MSG_FILE")
+
+# Conventional Commits pattern: type(scope): description
+# Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9_-]+\))?!?:[[:space:]].{1,100}$'
+
+if ! echo "$COMMIT_MSG" | grep -Eq "$PATTERN"; then
+    echo "❌ Commit message does not follow Conventional Commits format."
+    echo ""
+    echo "Expected: <type>(<scope>): <description>"
+    echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+    echo ""
+    echo "Examples:"
+    echo "  feat(jetbrains): add JCEF WebView bridge"
+    echo "  fix(api): handle timeout on backend health check"
+    echo "  test(dto): add CodagSettings serialization tests"
+    echo ""
+    echo "Your message: $COMMIT_MSG"
+    exit 1
+fi
+
+exit 0

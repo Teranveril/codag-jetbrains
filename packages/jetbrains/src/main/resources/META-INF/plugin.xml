@@ -1,0 +1,52 @@
+<idea-plugin>
+    <id>com.codag.jetbrains</id>
+    <name>Codag</name>
+    <description><![CDATA[
+        Visualize AI/LLM workflows in your codebase as interactive DAG graphs.
+        Powered by Gemini analysis. Port of the VS Code Codag extension to JetBrains Platform.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+                serviceImplementation="com.codag.jetbrains.settings.CodagSettings"/>
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.codag.jetbrains.settings.CodagSettingsConfigurable"
+                id="com.codag.jetbrains.settings"
+                displayName="Codag"/>
+        <toolWindow
+                id="Codag"
+                anchor="right"
+                factoryClass="com.codag.jetbrains.webview.CodagToolWindowFactory"
+                icon="AllIcons.Toolwindows.ToolWindowStructure"/>
+        <statusBarWidgetFactory
+                id="CodagStatusBar"
+                implementation="com.codag.jetbrains.watch.CodagStatusBarWidgetFactory"/>
+        <postStartupActivity
+                implementation="com.codag.jetbrains.watch.CodagStartupActivity"/>
+        <notificationGroup
+                id="Codag Notifications"
+                displayType="BALLOON"
+                isLogByDefault="true"/>
+    </extensions>
+
+    <listeners>
+        <projectListeners>
+            <listener class="com.codag.jetbrains.watch.CodagFileWatcher"
+                      topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        </projectListeners>
+    </listeners>
+
+    <actions>
+        <action id="com.codag.jetbrains.AnalyzeFiles"
+                class="com.codag.jetbrains.pipeline.CodagAnalysisAction"
+                text="Analyze with Codag"
+                description="Analyze selected files for AI/LLM workflow visualization">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift G"/>
+        </action>
+    </actions>
+</idea-plugin>

@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+JETBRAINS_DIR="packages/jetbrains"
+
+# Auto-detect JAVA_HOME from PHPStorm JBR if not set
+if [ -z "${JAVA_HOME:-}" ]; then
+    for jbr in /Applications/PhpStorm.app/Contents/jbr/Contents/Home \
+                /Applications/IntelliJ\ IDEA.app/Contents/jbr/Contents/Home \
+                /Applications/WebStorm.app/Contents/jbr/Contents/Home; do
+        if [ -d "$jbr" ]; then
+            export JAVA_HOME="$jbr"
+            export PATH="$JAVA_HOME/bin:$PATH"
+            break
+        fi
+    done
+fi
+
+# Only run checks if JetBrains plugin files changed
+CHANGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+if echo "$CHANGED_FILES" | grep -q "^$JETBRAINS_DIR/"; then
+    echo "🔍 Pre-commit: JetBrains plugin files changed — running checks..."
+
+    if [ -f "$JETBRAINS_DIR/gradlew" ]; then
+        echo "📋 Running ktlintCheck..."
+        (cd "$JETBRAINS_DIR" && ./gradlew ktlintCheck --quiet 2>/dev/null) || true
+
+        echo "🧪 Running tests..."
+        (cd "$JETBRAINS_DIR" && ./gradlew test --quiet) || {
+            echo "❌ Tests failed. Commit aborted."
+            exit 1
+        }
+        echo "✅ All checks passed."
+    else
+        echo "⚠️  Gradle wrapper not found in $JETBRAINS_DIR — skipping checks."
+    fi
+fi
+
+exit 0

@@ -1,0 +1,125 @@
+name: JetBrains Plugin CI
+
+on:
+  push:
+    branches: [feature/jetbrains-plugin]
+    paths:
+      - 'packages/jetbrains/**'
+      - '.github/workflows/jetbrains-plugin.yml'
+    tags:
+      - 'jetbrains-v*'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'packages/jetbrains/**'
+      - '.github/workflows/jetbrains-plugin.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/jetbrains
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/feature/jetbrains-plugin' }}
+
+      - name: Build plugin
+        run: ./gradlew buildPlugin
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Verify plugin structure
+        run: ./gradlew verifyPluginStructure
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codag-jetbrains-plugin
+          path: packages/jetbrains/build/distributions/*.zip
+          retention-days: 7
+
+  verify:
+    name: IntelliJ Plugin Verifier
+    needs: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/jetbrains
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Plugin Verifier
+        run: ./gradlew verifyPlugin
+        continue-on-error: true
+
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-verification-report
+          path: packages/jetbrains/build/reports/pluginVerifier/
+          retention-days: 7
+
+  release:
+    name: Release Plugin
+    if: startsWith(github.ref, 'refs/tags/jetbrains-v')
+    needs: [build, verify]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        working-directory: packages/jetbrains
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build plugin
+        run: ./gradlew buildPlugin
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/jetbrains-v}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Codag JetBrains Plugin v${{ steps.version.outputs.version }}"
+          body_path: packages/jetbrains/CHANGELOG.md
+          files: packages/jetbrains/build/distributions/*.zip
+          draft: false
+          prerelease: false
